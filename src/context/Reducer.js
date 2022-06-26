@@ -8,6 +8,8 @@ const Reducer = (state, action) => {
         case DOWNLOAD_DATA_ADD:
             return { ...state, downLoadData: action.payload }
 
+        case USERTYPE: 
+            return { ...state, userType: action.payload }
 
 
         default:
