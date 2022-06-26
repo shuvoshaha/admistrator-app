@@ -1,17 +1,20 @@
-import { createContext, useState, useEffect, useReducer } from 'react'
-import Reducer from './Reducer'
+import { createContext, useEffect, useReducer } from 'react'
+import Reducer from './Reducer';
+import { DownloadData } from '../data/download.data';
+import { DOWNLOAD_DATA_ADD } from './actions';
+
 
 // checking data is exists in local storage
-const visitorDataInLocal = localStorage.getItem("download_data")
-const userDataInLocal = localStorage.getItem("user_data")
+const downLoadDataLocal = JSON.stringify(localStorage.getItem("download_data"));
+const userDataInLocal = JSON.stringify(localStorage.getItem("user_data"));
 
 
-// state management
+// state initial
 const initialState = {
     loading: false,
     userType: 'visitor',
-    adminData: userDataInLocal ? userDataInLocal : [],
-    visitorData: visitorDataInLocal ? visitorDataInLocal : []
+    userData: userDataInLocal ? userDataInLocal : [],
+    downLoadData: DownloadData ? DownloadData :  userDataInLocal
 }
 
 
@@ -20,13 +23,25 @@ export const ContextProvider = createContext(initialState)
 
 const Context = ({ children }) => {
 
+
     // reducer initial
     const [state, dispatch] = useReducer(Reducer, initialState)
 
-    // state update
+
+    // localStorage update when state will update
     useEffect(() => {
-        localStorage
-    }, [])
+
+        // dispatch({ type: DOWNLOAD_DATA_ADD, payload: DownloadData })
+
+        localStorage.setItem('download_data', JSON.stringify(state.downLoadData));
+        localStorage.setItem('user_data', JSON.stringify(state.userData));
+
+
+        return () => dispatch({})
+
+    }, [state])
+
+
 
     return (
         <ContextProvider.Provider value={{ state, dispatch }} >
